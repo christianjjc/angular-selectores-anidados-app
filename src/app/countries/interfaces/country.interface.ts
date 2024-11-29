@@ -6,6 +6,12 @@ export enum RegionI {
   Africa = 'Africa',
 }
 
+export interface SmallCountryI {
+  name: string;
+  cca3: string;
+  borders: string[];
+}
+
 export interface CountryI {
   name: Name;
   cca3: string;
