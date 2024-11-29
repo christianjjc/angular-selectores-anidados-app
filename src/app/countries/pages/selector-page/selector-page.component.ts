@@ -11,7 +11,7 @@ import { SmallCountryI } from '../../interfaces/country.interface';
 })
 export class SelectorPageComponent implements OnInit {
   public countriesByRegion: SmallCountryI[] = [];
-  public borders: string[] = [];
+  public borders: SmallCountryI[] = [];
 
   public myForm: FormGroup = this.fb.group({
     region: ['', Validators.required],
@@ -56,10 +56,13 @@ export class SelectorPageComponent implements OnInit {
         filter((value: string) => value.length > 0),
         switchMap((alphaCode) =>
           this.countriesService.getBorderByAlphaCode(alphaCode)
+        ),
+        switchMap((country) =>
+          this.countriesService.getCountryBordersByCodes(country.borders)
         )
       )
-      .subscribe((country) => {
-        this.borders = country.borders;
+      .subscribe((countries) => {
+        this.borders = countries;
       });
   }
 }

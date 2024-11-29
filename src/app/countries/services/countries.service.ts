@@ -4,7 +4,7 @@ import {
   RegionI,
   SmallCountryI,
 } from '../interfaces/country.interface';
-import { map, Observable, of, tap } from 'rxjs';
+import { combineLatest, map, Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -38,8 +38,8 @@ export class CountriesService {
           cca3: country.cca3,
           borders: country.borders ?? [],
         }))
-      ),
-      tap((response) => console.log(response))
+      )
+      // tap((response) => console.log(response))
     );
   }
 
@@ -52,5 +52,15 @@ export class CountriesService {
         borders: country.borders ?? [],
       }))
     );
+  }
+
+  getCountryBordersByCodes(borders: string[]): Observable<SmallCountryI[]> {
+    if (!borders || borders.length === 0) return of([]);
+    const countriesRequest: Observable<SmallCountryI>[] = [];
+    borders.forEach((code) => {
+      const request = this.getBorderByAlphaCode(code);
+      countriesRequest.push(request);
+    });
+    return combineLatest(countriesRequest);
   }
 }
